@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Validator;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -16,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Validator;
     denormalizationContext: ['groups' => ['write']],
     normalizationContext: ['groups' => ['read']],
 )]
+#[UniqueEntity('email')]
 class User implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -31,13 +34,17 @@ class User implements PasswordAuthenticatedUserInterface
     private $email;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read', 'write'])]
+    #[Groups(['read'])]
+    private $password;
+    
+    #[SerializedName('password')]
+    #[Groups(['write'])]
     #[Validator\NotBlank(message: 'Le mot de passe ne doit pas être vide.')]
     #[Validator\Length(
         max: 255,
         maxMessage: 'Le mot de passe ne doit pas faire plus de {{ limit }} caractères.'
     )]
-    private $password;
+    private $plainPassword;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Groups(['read', 'write'])]
@@ -61,7 +68,7 @@ class User implements PasswordAuthenticatedUserInterface
     )]
     private $lastName;
 
-    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'users')]
+    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'users', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['write'])]
     private $customer;
@@ -92,6 +99,16 @@ class User implements PasswordAuthenticatedUserInterface
     {
         $this->password = $password;
 
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
         return $this;
     }
 
@@ -129,5 +146,11 @@ class User implements PasswordAuthenticatedUserInterface
         $this->customer = $customer;
 
         return $this;
+    }
+
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        $this->plainPassword = null;
     }
 }
