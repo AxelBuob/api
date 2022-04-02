@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Validator;
+use Doctrine\ORM\Mapping\EntityListeners;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -61,7 +62,7 @@ class User implements PasswordAuthenticatedUserInterface
     )]
     private $lastName;
 
-    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'users')]
+    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'users', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['write'])]
     private $customer;
