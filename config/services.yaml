@@ -24,7 +24,7 @@ services:
         decorates: 'api_platform.openapi.factory'
         arguments: ['@.inner']
 
-    App\Doctrine\CurrentClientUserExtension:
+    App\Doctrine\CurrentCustomerExtension:
         tags:
             - { name: api_platform.doctrine.orm.query_extension.collection }
             - { name: api_platform.doctrine.orm.query_extension.item }
