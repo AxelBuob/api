@@ -43,7 +43,12 @@ final class JwtDecorator implements OpenApiFactoryInterface
             ],
         ]);
 
-        $pathItem = new Model\PathItem(
+        $schemas['Logout'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => []
+        ]);
+
+        $loginItem = new Model\PathItem(
             ref: 'JWT Token',
             post: new Model\Operation(
                 operationId: 'postCredentialsItem',
@@ -73,7 +78,38 @@ final class JwtDecorator implements OpenApiFactoryInterface
                 ),
             ),
         );
-        $openApi->getPaths()->addPath('/login', $pathItem);
+        $logoutItem = new Model\PathItem(
+            ref: 'Login out',
+            get: new Model\Operation(
+                operationId: 'loginOutItem',
+                tags: ['Token'],
+                responses: [
+                    '200' => [
+                        'description' => 'Login out',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/Logout',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                summary: 'logout',
+                requestBody: new Model\RequestBody(
+                    description: 'Logout',
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/Logout',
+                            ],
+                        ],
+                    ]),
+                ),
+            ),
+        );
+        $openApi->getPaths()->addPath('/login', $loginItem);
+        $openApi->getPaths()->addPath('/logout', $logoutItem);
 
         return $openApi;
     }
