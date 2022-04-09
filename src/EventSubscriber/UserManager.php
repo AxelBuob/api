@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener;
+namespace App\EventSubscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\User;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Security;
 
-class PostUserSubscriber implements EventSubscriberInterface
+class UserManager implements EventSubscriberInterface
 {
     public function __construct(
         private Security $security,
