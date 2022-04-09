@@ -9,7 +9,7 @@ use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Security;
 
-final class CurrentClientUserExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
+final class CurrentCustomerExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     public function __construct(private Security $security)
     {
