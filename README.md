@@ -1,3 +1,8 @@
+## Requirements
+
+- PHP >=8.0
+- Mysql >=s8.0
+
 ### Project setup
 
 ```
